@@ -10,7 +10,7 @@ blog_theme: dark # Or use dark
 name: Sungjae Hwang
 tagline: Security Researcher
 about-description: # Add Discription
-pic: 79.jpg  # Place a 200x200 picture inside /assets/img/ folder and provide the name of the file below
+pic: intro.png  # Place a 200x200 picture inside /assets/img/ folder and provide the name of the file below
 
 # Contact links
 email: jason.sungjae.hwang@gmail.com # Add your Email address
