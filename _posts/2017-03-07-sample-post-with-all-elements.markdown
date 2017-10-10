@@ -2,8 +2,8 @@
 layout: post
 title:  "Pwnable: FIX Write-up"
 description: Write-up of "FIX" problem
-img:
-date: 2017-03-07  +0200
+img:no image
+date: 2016-03-07  +0200
 ---
 
 ```c
@@ -12,6 +12,7 @@ printf(..);
 }
 ```
 
+#### This problem,, we could only modify 1 byte of shellcode, and we must leverage this vulnerability to obtain privileged shell. 
 
 ## Headings
 
