@@ -186,3 +186,7 @@ The reason program crashes is that eip is increased as the instruction executed,
 {% highlight markdown %}
 > On the second push instruction, because esp is pointing to eip memory region, it overwrites eip and therefore, program crashes with illegal instrction.  
 {% endhighlight %}
+
+**In order to solve this problem, you need to leverage "leave" instruction to change esp value so that it does not overwrite eip. **
+**0xc9 is leave instruction, and since we could modify one byte, we can change insert it into our shellcode **
+**Leave instruction changes esp value to ebp value. **
