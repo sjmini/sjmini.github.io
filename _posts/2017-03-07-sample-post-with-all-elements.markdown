@@ -6,6 +6,8 @@ img: no image
 date: 2016-03-07  +0200
 ---
 
+Below is the source code of vulnerable binary file.  
+
 ```c
 #include <stdio.h>
 
