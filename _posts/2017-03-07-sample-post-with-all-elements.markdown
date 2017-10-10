@@ -2,7 +2,7 @@
 layout: post
 title:  "Pwnable: FIX Write-up"
 description: Write-up of "FIX" problem
-img:no image
+img: no image
 date: 2016-03-07  +0200
 ---
 
