@@ -1,12 +1,40 @@
 ---
 layout: post
-title:  "Exploit code in pipe"
+title:  "Exploit code using pipe"
 description: I tested how `PIPE` is working.
 img: 
 date:   2017-02-27 14:55:52 +0200
 categories: 
 ---
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+I tested how `PIPE` is working in lunux. Understanding how PIPE works is kind of interesting to me as a lot of exploit codes use it.  
+
+If we pass argument using pipe as below, the input is going into stdin buffer not argv1.  
+> sungje.hwang@LGEARND15B13:~/hacking/pipe$ echo "1111122222333" | ./test  
+
+My question is that how this input value is used by program if there are multiple scanf functions in the program.  
+I developed simple test program as follow  
+{% highlight c %}
+#include <stdio.h>
+
+int main() {
+ char name[5];
+ char name2[5];
+ char name3[3];
+ 
+ printf("first input\n");
+ scanf("%5c", name);
+ 
+ printf("second input\n");
+ scanf("%5c", name2);
+ 
+ printf("third input\n");
+ scanf("%3c", name3);
+ 
+ printf("1=%s, 2=%s, 3=%s\n", name, name2, name3);
+ return 0;
+}
+
+{% endhighlight %}
 
 To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
 
