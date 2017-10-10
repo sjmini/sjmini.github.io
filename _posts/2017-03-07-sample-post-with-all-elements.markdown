@@ -108,17 +108,28 @@ Let's disam shellcode function.
 
 break at shellcode+6 and evaluate stack.
 
-> (gdb) x/10i *shellcode  
-> 0x80484e4 <shellcode>: push ebp  
-> 0x80484e5 <shellcode+1>: mov ebp,esp  
-> 0x80484e7 <shellcode+3>: sub esp,0x38  
-> => 0x80484ea <shellcode+6>: mov DWORD PTR [esp+0x4],0x804a024   
-> 0x80484f2 <shellcode+14>: lea eax,[ebp-0x1c]  
-> 0x80484f5 <shellcode+17>: mov DWORD PTR [esp],eax  
-> 0x80484f8 <shellcode+20>: call 0x80483e0 <strcpy@plt>  
-> 0x80484fd <shellcode+25>: lea eax,[ebp-0x1c]  
-> 0x8048500 <shellcode+28>: lea edx,[eax+0x20]  
-> 0x8048503 <shellcode+31>: lea eax,[ebp-0x1c]  
+(gdb) x/10i *shellcode  
+
+0x80484e4 <shellcode>: push ebp  
+  
+0x80484e5 <shellcode+1>: mov ebp,esp  
+
+0x80484e7 <shellcode+3>: sub esp,0x38  
+
+=> 0x80484ea <shellcode+6>: mov DWORD PTR [esp+0x4],0x804a024  
+
+0x80484f2 <shellcode+14>: lea eax,[ebp-0x1c]  
+
+0x80484f5 <shellcode+17>: mov DWORD PTR [esp],eax  
+
+0x80484f8 <shellcode+20>: call 0x80483e0 <strcpy@plt>  
+
+0x80484fd <shellcode+25>: lea eax,[ebp-0x1c]  
+
+0x8048500 <shellcode+28>: lea edx,[eax+0x20]  
+
+0x8048503 <shellcode+31>: lea eax,[ebp-0x1c]  
+
 
 > (gdb) x/10wx $ebp  
 > 0xfff7bed8: 0xfff7bf08 **(old ebp)** 0x080485c7 **(ret)** 0x0804874e 0xfff7bef8  
@@ -144,17 +155,27 @@ awesom!    
 > 0x8048506 <shellcode+34>:    mov    DWORD PTR [edx],eax   
 
 After above instruction, ret is changes to shellcode..  
-> (gdb) x/10i 0xfff7bebc  
-> =>0x804a024 <sc>: xor eax,eax   
-> 0x804a026 <sc+2>: push eax    
-> 0x804a027 <sc+3>: push 0x68732f2f  
-> 0x804a02c <sc+8>: push 0x6e69622f  
-> 0x804a031 <sc+13>: mov ebx,esp  
-> 0x804a033 <sc+15>: push eax  
-> 0x804a034 <sc+16>: push ebx  
-> 0x804a035 <sc+17>: mov ecx,esp  
-> 0x804a037 <sc+19>: mov al,0xb  
-> 0x804a039 <sc+21>: int 0x80  
+(gdb) x/10i 0xfff7bebc  
+
+=>0x804a024 <sc>: xor eax,eax  
+  
+0x804a026 <sc+2>: push eax  
+
+0x804a027 <sc+3>: push 0x68732f2f  
+
+0x804a02c <sc+8>: push 0x6e69622f  
+
+0x804a031 <sc+13>: mov ebx,esp  
+
+0x804a033 <sc+15>: push eax  
+
+0x804a034 <sc+16>: push ebx  
+
+0x804a035 <sc+17>: mov ecx,esp  
+
+0x804a037 <sc+19>: mov al,0xb  
+
+0x804a039 <sc+21>: int 0x80  
 
 so far so good. Then why the program crashes?  
 The program crashes after executing below instruction.  
