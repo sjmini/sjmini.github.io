@@ -108,27 +108,16 @@ Let's disam shellcode function.
 break at shellcode+6 and evaluate stack.
 
 > (gdb) x/10i *shellcode  
-
-> 0x80484e4 <shellcode>: push ebp  
-  
+> 0x80484e4 <shellcode>: push ebp    
 > 0x80484e5 <shellcode+1>: mov ebp,esp  
-
 > 0x80484e7 <shellcode+3>: sub esp,0x38  
-
 > => 0x80484ea <shellcode+6>: mov DWORD PTR [esp+0x4],0x804a024  
-
 > 0x80484f2 <shellcode+14>: lea eax,[ebp-0x1c]  
-
 > 0x80484f5 <shellcode+17>: mov DWORD PTR [esp],eax  
-
 > 0x80484f8 <shellcode+20>: call 0x80483e0 <strcpy@plt>  
-
 > 0x80484fd <shellcode+25>: lea eax,[ebp-0x1c]  
-
 > 0x8048500 <shellcode+28>: lea edx,[eax+0x20]  
-
 > 0x8048503 <shellcode+31>: lea eax,[ebp-0x1c]  
-
 
 > (gdb) x/10wx $ebp  
 > 0xfff7bed8: 0xfff7bf08 **(old ebp)** 0x080485c7 **(ret)** 0x0804874e 0xfff7bef8  
