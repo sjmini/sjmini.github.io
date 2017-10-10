@@ -8,7 +8,7 @@ date: 2016-03-07  +0200
 
 Below is the source code of vulnerable binary file.  
 
-```c
+{% highlight c %}
 #include <stdio.h>
 
 // 23byte shellcode from  
@@ -53,7 +53,7 @@ int main(){
         return 0;
 }
 
-```
+{% endhighlight %}
 
 If you analyze binary file, you could figure out that we could modify 1 byte of shellcode, and we must leverage this vulnerability to obtain privileged shell.  
 The shellcode is embedded in the binary and I have checked whether it is valid shellcode as below:  
