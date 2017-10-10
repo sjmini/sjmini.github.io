@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Pwnable: FIX"
+title:  "Pwnable: FIX Write-up"
 description: Write-up of "FIX" problem
 img:
 date: 2017-03-07  +0200
