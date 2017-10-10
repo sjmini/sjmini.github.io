@@ -154,7 +154,7 @@ After above instruction, ret is changes to shellcode..
 > 0x804a035 <sc+17>: mov ecx,esp  
 > 0x804a037 <sc+19>: mov al,0xb  
 > 0x804a039 <sc+21>: int 0x80  
-  
+
 so far so good. Then why the program crashes?  
 The program crashes after executing below instruction.  
 > => 0x804a02c <sc+8>: push 0x6e69622f
