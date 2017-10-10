@@ -30,14 +30,38 @@ Indeed it is valud shellcoded.
 To briefly explain meaning of "push $0x68732f2f" and "push $0x6e69622f".
 This is very basic technique to create shellcode. It embed necessary strings in the exploit code as follow:
 
-push '/' ; same as push 0x2f  
-push 'b' ; same as push 0x62  
-push 'i' ; same as push 0x69  
-push 'n' ; same as push 0x6e  
-push '/' ; same as push 0x2f  
-push '/' ; same as push 0x2f  
-push 's' ; same as push 0x73  
-push 'h' ; same as push 0x68  
+> push '/' ; is push 0x2f  
+> push 'b' ; is push 0x62  
+> push 'i' ; is push 0x69  
+> push 'n' ; is push 0x6e  
+> push '/' ; is push 0x2f  
+> push '/' ; is push 0x2f  
+> push 's' ; is push 0x73  
+> push 'h' ; is push 0x68  
+
+However, even if it is valid shellcode, If you execute the program, it crashes!!!
+You need to analyze why this is happening..
+I started analyzing using gdb.
+Let's disam shellcode function.
+
+> (gdb) disas shellcode  
+> Dump of assembler code for function shellcode:  
+> 0x080484e4 <+0>: push ebp  
+> 0x080484e5 <+1>: mov ebp,esp  
+> 0x080484e7 <+3>: sub esp,0x38  
+> 0x080484ea <+6>: mov DWORD PTR [esp+0x4],0x804a024  
+> 0x080484f2 <+14>: lea eax,[ebp-0x1c]  
+> 0x080484f5 <+17>: mov DWORD PTR [esp],eax  
+> 0x080484f8 <+20>: call 0x80483e0 <strcpy@plt>  
+> 0x080484fd <+25>: lea eax,[ebp-0x1c]  
+> 0x08048500 <+28>: lea edx,[eax+0x20]  
+> 0x08048503 <+31>: lea eax,[ebp-0x1c]  
+> 0x08048506 <+34>: mov DWORD PTR [edx],eax  
+> 0x08048508 <+36>: mov DWORD PTR [esp],0x80486a0  
+> 0x0804850f <+43>: call 0x80483f0 <puts@plt>  
+> 0x08048514 <+48>: leave  
+> 0x08048515 <+49>: ret  
+> End of assembler dump.  
 
 ## Headings
 
