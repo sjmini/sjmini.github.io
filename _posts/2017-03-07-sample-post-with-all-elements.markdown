@@ -8,6 +8,11 @@ date: 2016-03-07  +0200
 
 Below is the source code of vulnerable binary file.  
 
+<!--
+```c
+```
+-->
+
 {% highlight c %}
 #include <stdio.h>
 
@@ -69,7 +74,7 @@ The shellcode is embedded in the binary and I have checked whether it is valid s
 > mov    $0xb,%al  
 > int    $0x80  
 
-Indeed it is valud shellcoded.  
+Indeed it is valid shellcoded.  
 To briefly explain meaning of "push $0x68732f2f" and "push $0x6e69622f".  
 This is very basic technique to create shellcode. It embeds necessary strings in the exploit code as follow:  
 
