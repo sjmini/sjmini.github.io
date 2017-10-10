@@ -90,7 +90,7 @@ This is very basic technique to create shellcode. It embeds necessary strings in
 However, even if it is valid shellcode, If you execute the program, it crashes!!!  
 You need to analyze why this is happening..  
 I started analyzing using gdb.  
-Let's disam shellcode function.  
+Let's disas shellcode function.  
 
 > (gdb) disas shellcode  
 > Dump of assembler code for function shellcode:  
@@ -155,11 +155,11 @@ If you further analyze the binary code, you can find some interesting stuff is g
 > (gdb) x/wx $eax+0x20 --> **this refers ret**  
 > 0xfff7bedc: 0x080485c7  
 
-this means, our shellcode will overwrite ret address with below instruction.  
+This means, below instruction will overwrite ret address to our shellcode.  
 awesom!    
 > 0x8048506 <shellcode+34>:    mov    DWORD PTR [edx],eax   
 
-After above instruction, ret is changes to shellcode..  
+After above instruction, ret is changed to shellcode..  
 (gdb) x/10i 0xfff7bebc  
 
 =>0x804a024 <sc>: xor eax,eax  
@@ -186,17 +186,17 @@ so far so good. Then why the program crashes?
 The program crashes after executing below instruction.  
 > => 0x804a02c <sc+8>: push 0x6e69622f
 
-very interesting..  
+Very interesting..  
 The reason program crashes is that eip is increased as the instruction executed, whereas esp decreases as push instruction is executed. So, there is 5 push instructions in the shellcode..  
 {% highlight markdown %}
-> On the second push instruction, because esp is pointing to eip memory region, it overwrites eip and therefore, program crashes with illegal instrction.  
+> On the second push instruction, because esp is pointing to eip memory region, it overwrites eip and therefore, program crashes with illegal instruction.  
 {% endhighlight %}
 
-**In order to solve this problem, you need to leverage "leave" instruction to change esp value so that it does not overwrite eip. **
-**0xc9 is leave instruction, and since we could modify one byte, we can change insert it into our shellcode **
-**Leave instruction changes esp value to ebp value. **
+In order to solve this problem, you need to leverage "leave" instruction to change esp value so that it does not overwrite eip.
+0xc9 is leave instruction, and since we could modify one byte, we can change insert it into our shellcode
+Leave instruction changes esp value to ebp value.
 
-leave ins is equavalent to mov esp, ebp and pop ebp.  
+leave instruction is equavalent to mov esp, ebp and pop ebp.  
 
 ; enter  
 push ebp  
