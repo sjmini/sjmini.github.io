@@ -157,54 +157,10 @@ After above instruction, ret is changes to shellcode..
   
 so far so good. Then why the program crashes?  
 The program crashes after executing below instruction.  
-> => 0x804a027 <sc+3>: push 0x68732f2f  
+> => 0x804a02c <sc+8>: push 0x6e69622f
 
-
-## Headings
-
-Headings by default:
-
-## Heading first level
-### Heading second level
-#### Heading third level
-
+very interesting..  
+The reason program crashes is that eip is increased as the instruction executed, whereas esp decreases as push instruction is executed. So, there is 5 push instructions in the shellcode..  
 {% highlight markdown %}
-## Heading first level
-### Heading second level
-#### Heading third level
-{% endhighlight %}
-
-## Lists
-
-Unordered list example:
-* Unordered list item 1
-* Unordered list item 2
-* Unordered list item 3
-* Unordered list item 4
-
-Ordered list example:
-1. Ordered list item 1
-2. Ordered list item 1
-3. Ordered list item 1
-4. Ordered list item 1
-
-{% highlight markdown %}
-* Unordered list item 1
-* Unordered list item 2
-
-1. Order list item 1
-2. Order list item 1
-{% endhighlight %}
-
-
-## Quotes
-
-A quote looks like this:
-
-> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna.
-
-{% highlight markdown %}
-> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna.
+> On the second push instruction, because esp is pointing to eip memory region, it overwrites eip and therefore, program crashes with illegal instrction.  
 {% endhighlight %}
