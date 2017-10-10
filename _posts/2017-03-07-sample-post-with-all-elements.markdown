@@ -190,3 +190,12 @@ The reason program crashes is that eip is increased as the instruction executed,
 **In order to solve this problem, you need to leverage "leave" instruction to change esp value so that it does not overwrite eip. **
 **0xc9 is leave instruction, and since we could modify one byte, we can change insert it into our shellcode **
 **Leave instruction changes esp value to ebp value. **
+
+For those people who do not familiar with this concept, see below  
+; enter  
+push ebp  
+mov ebp, esp  
+
+; leave  
+mov esp, ebp  
+pop ebp  
