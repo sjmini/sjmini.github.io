@@ -6,6 +6,13 @@ img:
 date: 2017-03-07  +0200
 ---
 
+```c
+private void test(){
+printf(..);
+}
+```
+
+
 ## Headings
 
 Headings by default:
