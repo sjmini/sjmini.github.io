@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Pwnable: FIX"
-description: Lorem Ipsum Dolor Sit Amet Consectetur Adipisicing Elit Sed Do Eiusmod Tempor Incidi
+description: Write-up of "FIX" problem
 img:
 date: 2017-03-07  +0200
 ---
