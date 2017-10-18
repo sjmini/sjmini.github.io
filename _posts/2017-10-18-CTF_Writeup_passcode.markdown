@@ -38,7 +38,7 @@ void welcome(){
         printf("enter you name : ");
         scanf("%100s", name);
         printf("Welcome %s!\n", name);
-}
+} 
 
 int main(){
         printf("Toddler's Secure Login System 1.0 beta.\n");
