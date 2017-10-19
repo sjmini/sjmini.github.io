@@ -1,12 +1,13 @@
 ---
 layout: post
 title:  "CTF: Second Write-up"
-description: Write-up of "Passcode" problem
+description: Write-up of Passcode problem
 img: no image
 date: 2017-10-18  +0200
 ---
 
-{% highlight c %}
+Below is the source code of vulnerable binary file.  
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,4 +51,3 @@ int main(){
         printf("Now I can safely trust you that you have credential :)\n");
         return 0;
 }
-{% endhighlight %}
