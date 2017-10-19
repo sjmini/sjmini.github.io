@@ -7,6 +7,7 @@ date: 2017-10-18  +0200
 ---
 
 {% highlight c %}
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -42,7 +43,6 @@ void welcome(){
 
 int main(){
         printf("Toddler's Secure Login System 1.0 beta.\n");
-
         welcome();
         login();
 
@@ -50,5 +50,4 @@ int main(){
         printf("Now I can safely trust you that you have credential :)\n");
         return 0;
 }
-
 {% endhighlight %}
