@@ -8,7 +8,7 @@ date: 2017-10-18  +0200
 
 Below is the source code of vulnerable binary file.  
 
-
+{% highlight c %}
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -51,3 +51,4 @@ int main(){
         printf("Now I can safely trust you that you have credential :)\n");
         return 0;
 }
+{% endhighlight %}
