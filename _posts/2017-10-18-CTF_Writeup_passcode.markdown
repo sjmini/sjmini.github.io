@@ -52,3 +52,17 @@ int main(){
         return 0;
 }
 {% endhighlight %}
+
+This is typical GOT overwrite problem.
+
+The problem in this program is straight forward. It misuses scanf function.
+e.x. scanf("%d", passcode1); should be scanf("%d", &passcode1);
+Because of this vulnerable code, we can hijeck control flow.
+
+I did following to solve this problem.
+1. point passcode1 to printf got by exploiting buffer overflow vulnerability
+2. change printf got value to system function's got value
+3. make the program called enter which reads flag value.
+
+First of all, I need to figure out got values.
+
