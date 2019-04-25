@@ -237,6 +237,7 @@ All ready, let's send the payload to get the flag!
 6700".decode("hex")' > hsj3
 
 asm@ubuntu:~$ cat /tmp/sj/hsj3 | nc 0 9026
+
 Welcome to shellcoding practice challenge.
 In this challenge, you can run your x64 shellcode under SECCOMP sandbox.
 Try to make shellcode that spits flag using open()/read()/write() systemcalls only.
