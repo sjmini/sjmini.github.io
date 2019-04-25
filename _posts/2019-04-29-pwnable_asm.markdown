@@ -12,6 +12,7 @@ once you connect to port 9026, the "asm" binary will be executed under asm_pwn p
 make connection to challenge (nc 0 9026) then get the flag. (file name of the flag is same as the one in this directory)
 
 If asm binary is executed it ask user to input 64 bit shell code as follow;
+
 Welcome to shellcoding practice challenge.
 In this challenge, you can run your x64 shellcode under SECCOMP sandbox.
 Try to make shellcode that spits flag using open()/read()/write() systemcalls only.
@@ -120,10 +121,10 @@ There are two ways to make the shellcode.
 2. manually insert file name into code section
 
 The first option is straightforward but it is little bit annoying because there is no instrution for pushing 8 bytes of characters.
-If can only push 4 bytes at a time, and because of 64 bit platform, 0x000000 will added automatically in file name.
-We can push 8 bytes character into register and then push register in to stack.
+We can only push 4 bytes at a time, and because of 64 bit platform, 0x000000 will be added automatically in file name.
+We can push 8 bytes character by using registers, storing 8 bytes into register, and push the value of register into the stack.
 
-Instead, I used 2nd approach. I calculated the size of code section (shellcode), and used relative addressing technique to reference the file name which I manually insert at the end of shellcode.
+Anyway, I used 2nd approach. I calculated the size of code section (shellcode), and used relative address technique to reference the file name which I manually insert at the end of the shellcode.
 
 For relative address technique, read this
 https://subscription.packtpub.com/book/networking_and_servers/
