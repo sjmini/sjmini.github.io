@@ -61,4 +61,13 @@ There are two interesting things in this program.
 2. only allow addresses range in ascii
 
 because libc is loaded in fixed location, we can just use libc to launch ROP attack.
-So, first, I will hijack control flow of the program by exploiting a buffer overflow vulnerability 
+First, I will hijack control flow of the program by exploiting a buffer overflow vulnerability.
+After that, I will launch ROP attack to obtain privileged shell by calling execve.
+
+Let's first calculated how many bytes are required to exploit the buffer overflow vulnerability.
+
+{% highlight c %}
+0xffeb6570:	0xf77417eb	0xf7568700	0x00000000	0x41414141(buf start loc)
+0xffeb6580:	0xffeb6600	0xf7748010	0xf75c8cab	0xffeb6640
+0xffeb6590:	0xf771b000	0xf771b000	0xffeb6628(sfp)	0x0804865f(ret)
+{% endhighlight %}
