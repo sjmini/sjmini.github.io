@@ -2,7 +2,6 @@
 layout: post
 title:  "Pwnable ascii_easy challenge"
 description: libc ROP
-img: no image
 date: 2020-03-20
 ---
 
@@ -36,6 +35,7 @@ Program Headers:
 
 As we can see that there is no execution permission in stack.
 
+{% highlight c %}
 (gdb) disas vuln
 Dump of assembler code for function vuln:
    0x08048518 <+0>:	push   ebp
@@ -51,6 +51,7 @@ Dump of assembler code for function vuln:
    0x08048531 <+25>:	leave
    0x08048532 <+26>:	ret
 End of assembler dump.
+{% endhighlight %}
 
 No stack canary in this program.
 
